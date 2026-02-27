@@ -1,0 +1,593 @@
+:root {
+    /* Ultra-sober black palette */
+    --bg-main: #000000;
+    --bg-surface: #0a0a0a;
+    --bg-surface-hover: #141414;
+    --bg-elevated: #1a1a1a;
+    --text-primary: #e8e8e8;
+    --text-secondary: rgba(255, 255, 255, 0.45);
+    --text-muted: rgba(255, 255, 255, 0.25);
+    --accent: #ffffff;
+    --accent-dim: rgba(255, 255, 255, 0.6);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 255, 255, 0.15);
+
+    /* Typography */
+    --font-sacred: 'Cormorant Garamond', serif;
+    --font-ui: 'Inter', sans-serif;
+
+    /* Spacing */
+    --sidebar-width: 300px;
+    --exegesis-width: 400px;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-base: 0.3s ease;
+    --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: var(--font-sacred);
+    font-size: 1.2rem;
+    line-height: 1.75;
+    overflow: hidden;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 300;
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+}
+
+h1 span {
+    color: var(--text-secondary);
+}
+
+/* Layout */
+#app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+}
+
+/* ──────────────── Sidebar ──────────────── */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--bg-surface);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 10;
+    transition: transform var(--transition-base);
+}
+
+.sidebar-header {
+    padding: var(--spacing-md) var(--spacing-md) var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-header h1 {
+    font-size: 1.6rem;
+    margin-bottom: var(--spacing-sm);
+    text-align: center;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.search-container {
+    position: relative;
+    font-family: var(--font-ui);
+}
+
+#search-input {
+    width: 100%;
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 0;
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    font-weight: 300;
+    letter-spacing: 0.03em;
+    transition: border-color var(--transition-fast);
+}
+
+#search-input::placeholder {
+    color: var(--text-muted);
+    font-weight: 300;
+}
+
+#search-input:focus {
+    outline: none;
+    border-color: var(--accent-dim);
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.search-icon svg {
+    width: 0.9rem;
+    height: 0.9rem;
+    stroke: currentColor;
+    opacity: 0.7;
+}
+
+.gospels-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-xs) 0;
+    font-family: var(--font-ui);
+}
+
+/* ──────────────── Nav items ──────────────── */
+.gospel-item {
+    padding: 0 var(--spacing-sm);
+}
+
+.gospel-btn {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    padding: 0.8rem var(--spacing-sm);
+    font-size: 0.85rem;
+    font-family: var(--font-ui);
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: color var(--transition-fast);
+}
+
+.gospel-btn:hover {
+    color: var(--text-primary);
+}
+
+.gospel-btn.active {
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.chapters-list {
+    display: none;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.4rem;
+    padding: var(--spacing-sm);
+    background-color: rgba(255, 255, 255, 0.02);
+    margin-bottom: var(--spacing-xs);
+}
+
+.chapters-list.active {
+    display: grid;
+    animation: fadeIn var(--transition-base);
+}
+
+.chapter-btn {
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    padding: 0.45rem;
+    cursor: pointer;
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    font-weight: 300;
+    transition: all var(--transition-fast);
+}
+
+.chapter-btn:hover,
+.chapter-btn.active {
+    border-color: var(--accent-dim);
+    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.sidebar-footer {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    font-family: var(--font-ui);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1.8;
+}
+
+/* ──────────────── Reader ──────────────── */
+.reader-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: var(--bg-main);
+}
+
+.mobile-header {
+    display: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-surface);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.menu-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 22px;
+    height: 1px;
+    background-color: var(--text-secondary);
+    transition: var(--transition-fast);
+}
+
+.reader-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-lg) 18%;
+    scroll-behavior: smooth;
+    position: relative;
+}
+
+/* ──────────────── Scrollbar ──────────────── */
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* ──────────────── Welcome ──────────────── */
+.welcome-screen {
+    text-align: center;
+    margin-top: 25vh;
+    animation: fadeIn var(--transition-slow);
+}
+
+.welcome-title {
+    font-size: 2.8rem;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    margin-bottom: var(--spacing-sm);
+}
+
+.welcome-logo {
+    margin: var(--spacing-lg) 0;
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
+.welcome-subtitle {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 1.1rem;
+    font-weight: 300;
+}
+
+/* ──────────────── Chapter / Verses ──────────────── */
+.chapter-header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    animation: fadeIn var(--transition-slow);
+}
+
+.chapter-header h2 {
+    font-size: 2rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--spacing-xs);
+}
+
+.chapter-title {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+.verse-block {
+    display: inline;
+    position: relative;
+    line-height: inherit;
+    transition: background-color var(--transition-fast);
+}
+
+.verse-number {
+    font-family: var(--font-ui);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    vertical-align: super;
+    margin-right: 0.25rem;
+    margin-left: 0.4rem;
+    font-weight: 400;
+    transition: color var(--transition-fast);
+}
+
+.verse-text {
+    transition: color var(--transition-fast);
+}
+
+/* ──────────────── Exegesis indicators ──────────────── */
+.has-exegesis {
+    cursor: pointer;
+    position: relative;
+    padding: 2px 0;
+}
+
+.has-exegesis .verse-number {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.has-exegesis .verse-text {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    padding-bottom: 1px;
+}
+
+.has-exegesis:hover .verse-text {
+    color: var(--accent);
+    background-color: rgba(255, 255, 255, 0.05);
+    border-bottom-color: var(--accent-dim);
+}
+
+.exegesis-indicator {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: var(--accent-dim);
+    border-radius: 50%;
+    margin-left: 4px;
+    vertical-align: middle;
+    opacity: 0.6;
+    animation: pulse 3s infinite;
+}
+
+.verse-block.active {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.verse-block.active .verse-text {
+    color: var(--accent);
+}
+
+/* ──────────────── Exegesis panel ──────────────── */
+.exegesis-panel {
+    width: var(--exegesis-width);
+    background-color: var(--bg-surface);
+    border-left: 1px solid var(--border-color);
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    transform: translateX(100%);
+    transition: transform var(--transition-slow);
+    display: flex;
+    flex-direction: column;
+    z-index: 20;
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.7);
+}
+
+.exegesis-panel.open {
+    transform: translateX(0);
+}
+
+.exegesis-header {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.exegesis-header h3 {
+    font-size: 0.8rem;
+    font-family: var(--font-ui);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+    line-height: 1;
+}
+
+.close-btn:hover {
+    color: var(--text-primary);
+}
+
+.exegesis-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-md);
+}
+
+.exegesis-item {
+    margin-bottom: var(--spacing-lg);
+    animation: slideUp var(--transition-base);
+}
+
+.exegesis-verses-ref {
+    font-family: var(--font-ui);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.exegesis-author {
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    font-weight: 300;
+    margin-bottom: 0.15rem;
+}
+
+.exegesis-source {
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 300;
+}
+
+.exegesis-text {
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    padding-left: var(--spacing-sm);
+    border-left: 1px solid var(--border-color);
+    font-weight: 300;
+}
+
+/* ──────────────── Overlay ──────────────── */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 5;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* ──────────────── Animations ──────────────── */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 0.3;
+    }
+}
+
+/* ──────────────── Responsive ──────────────── */
+@media (max-width: 1024px) {
+    .reader-content {
+        padding: var(--spacing-lg) 8%;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        transform: translateX(-100%);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .mobile-header {
+        display: flex;
+    }
+
+    .reader-content {
+        padding: var(--spacing-md);
+    }
+
+    .exegesis-panel {
+        width: 100%;
+        max-width: 400px;
+    }
+}
